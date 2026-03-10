@@ -1,10 +1,6 @@
-[![Live Demo](https://img.shields.io/badge/Live-Demo-green)](https://charankommireddy.github.io/Resume-analyzer/)
 # 🚀 AI Resume Analyzer
 
-![Live Demo](https://img.shields.io/badge/Live-Demo-green?style=for-the-badge)
-![GitHub stars](https://img.shields.io/github/stars/charankommireddy/Resume-analyzer?style=social)
-![GitHub forks](https://img.shields.io/github/forks/charankommireddy/Resume-analyzer?style=social)
-![License](https://img.shields.io/badge/License-MIT-blue)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-green)](https://charankommireddy.github.io/Resume-analyzer/)
 
 AI Resume Analyzer is a **web-based AI tool that evaluates resumes and provides detailed feedback** including resume score, ATS compatibility, keyword analysis, and improvement suggestions.
 
