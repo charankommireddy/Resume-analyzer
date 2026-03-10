@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Resume Checker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============================================
+       NAVIGATION BAR
+  ============================================ -->
+  <nav>
+    <div class="container nav-inner">
+      <a href="#" class="nav-logo">
+        <div class="dot"></div>
+        AI Resume Checker
+      </a>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle dark/light mode">
+          <span class="theme-icon" id="themeIcon">🌙</span>
+          <span id="themeLabel">Dark</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================================
+       HERO SECTION
+  ============================================ -->
+  <section class="hero" id="top">
+    <div class="container">
+      <div class="hero-tag">✦ Powered by AI Analysis</div>
+
+      <h1>
+        Get Your Resume<br>
+        <span class="gradient-text">AI-Scored</span> Instantly
+      </h1>
+
+      <p>
+        Upload or paste your resume and receive a detailed breakdown — score, strengths,
+        improvement tips, keyword match, and section completeness. All in seconds.
+      </p>
+
+      <div class="hero-cta">
+        <a href="#upload" class="btn-primary">✦ Check My Resume</a>
+        <button class="btn-secondary" onclick="loadExample()">📄 Try Example Resume</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       UPLOAD / INPUT SECTION
+  ============================================ -->
+  <section class="upload-section" id="upload">
+    <div class="container">
+      <div class="section-label">Input</div>
+      <h2 class="section-title">Upload Your Resume</h2>
+      <p class="section-desc">Choose a file or paste your resume content below.</p>
+
+      <!-- Tab Switcher: File vs Paste -->
+      <div class="input-tabs">
+        <button class="tab-btn active" id="tab-file" onclick="switchTab('file')">📁 File Upload</button>
+        <button class="tab-btn" id="tab-paste" onclick="switchTab('paste')">📋 Paste Text</button>
+      </div>
+
+      <!-- FILE UPLOAD TAB -->
+      <div class="dropzone-wrap" id="dropzone-wrap">
+
+        <!-- Drop Zone -->
+        <div class="dropzone" id="dropzone"
+             onclick="document.getElementById('file-input').click()"
+             ondragover="handleDragOver(event)"
+             ondragleave="handleDragLeave(event)"
+             ondrop="handleDrop(event)">
+          <span class="dropzone-icon">📄</span>
+          <div class="dropzone-title">Drop your resume here</div>
+          <div class="dropzone-sub">or click to browse files</div>
+          <div class="dropzone-formats">
+            <span class="format-badge">PDF</span>
+            <span class="format-badge">DOC</span>
+            <span class="format-badge">DOCX</span>
+            <span class="format-badge">TXT</span>
+          </div>
+        </div>
+
+        <!-- Attached File Indicator -->
+        <div class="file-attached" id="file-attached">
+          <span>📎</span>
+          <span class="file-attached-name" id="attached-name">file.pdf</span>
+          <button class="remove-file" onclick="removeFile()" title="Remove file">✕</button>
+        </div>
+
+        <!-- Upload Progress Bar -->
+        <div class="upload-progress" id="upload-progress">
+          <div class="progress-label">
+            <span id="progress-label-text">Reading file...</span>
+            <span id="progress-pct">0%</span>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="progress-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PASTE TEXT TAB -->
+      <div class="paste-area" id="paste-area">
+        <textarea
+          class="resume-textarea"
+          id="resume-textarea"
+          placeholder="Paste your resume text here...&#10;&#10;Include sections like:&#10;• Contact Info&#10;• Summary / Objective&#10;• Work Experience&#10;• Education&#10;• Skills&#10;• Certifications"
+          oninput="updateCharCount()"
+        ></textarea>
+        <div class="char-count" id="char-count">0 characters</div>
+      </div>
+
+      <!-- Hidden File Input -->
+      <input type="file" id="file-input" accept=".pdf,.doc,.docx,.txt" onchange="handleFileSelect(event)" />
+
+      <!-- ============================================
+           JOB DESCRIPTION SECTION (NEW)
+      ============================================ -->
+      <div class="jd-section">
+        <div class="jd-header">
+          <div class="jd-title-row">
+            <span class="jd-icon">🎯</span>
+            <div>
+              <div class="jd-title">Job Description Match <span class="jd-badge">Optional</span></div>
+              <div class="jd-subtitle">Paste a job description to get tailored keyword matching & ATS score</div>
+            </div>
+          </div>
+          <button class="jd-toggle-btn" id="jd-toggle-btn" onclick="toggleJD()">
+            <span id="jd-toggle-icon">＋</span> Add Job Description
+          </button>
+        </div>
+
+        <div class="jd-body" id="jd-body">
+          <textarea
+            class="resume-textarea jd-textarea"
+            id="jd-textarea"
+            placeholder="Paste the job description here...&#10;&#10;Example:&#10;We are looking for a Senior Software Engineer with experience in:&#10;• React, Node.js, TypeScript&#10;• AWS or GCP cloud platforms&#10;• Agile/Scrum methodology&#10;• 5+ years of professional experience"
+            oninput="updateJDCharCount()"
+          ></textarea>
+          <div class="jd-footer-row">
+            <div class="char-count" id="jd-char-count">0 characters</div>
+            <button class="btn-secondary" style="font-size:0.75rem;padding:6px 14px;" onclick="clearJD()">✕ Clear JD</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Actions -->
+      <div class="input-footer">
+        <div></div>
+        <div style="display:flex; gap:12px;">
+          <button class="btn-secondary" onclick="clearAll()">↺ Clear</button>
+          <button class="btn-primary" onclick="analyzeResume()">✦ Analyze Resume</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       RESULTS DASHBOARD
+  ============================================ -->
+  <section class="results-section" id="results-section">
+    <div class="container">
+      <div class="section-label">Results</div>
+      <h2 class="section-title">Your Resume Analysis</h2>
+      <p class="section-desc" id="results-summary-text">Analysis complete — here's your detailed breakdown.</p>
+
+      <!-- Score Hero Card -->
+      <div class="score-hero">
+
+        <!-- Circular Score Gauge (SVG) -->
+        <div class="score-circle-wrap">
+          <svg class="score-svg" width="120" height="120" viewBox="0 0 120 120">
+            <circle class="score-track" cx="60" cy="60" r="45"/>
+            <circle class="score-fill" id="score-fill-circle" cx="60" cy="60" r="45"/>
+          </svg>
+          <div class="score-number">
+            <span class="score-val" id="score-val">0</span>
+            <span class="score-label">/100</span>
+          </div>
+        </div>
+
+        <!-- Score Details & Mini Bars -->
+        <div class="score-details">
+          <div class="score-grade" id="score-grade">—</div>
+          <div class="score-message" id="score-message">Analyzing your resume...</div>
+          <div class="mini-stats" id="mini-stats"></div>
+        </div>
+      </div>
+
+      <!-- Results Cards Grid (injected by JS) -->
+      <div class="results-grid" id="results-grid"></div>
+
+      <!-- Action Buttons -->
+      <div class="results-actions">
+        <button class="btn-primary" onclick="downloadReport()">⬇ Download Report</button>
+        <button class="btn-secondary" onclick="reanalyze()">↺ Re-analyze</button>
+        <button class="btn-secondary" onclick="scrollToUpload()">✏ Edit Resume</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       FOOTER
+  ============================================ -->
+  <footer>
+    <div class="container">
+      AI Resume Checker — Built with <span>♥</span> for job seekers everywhere
+    </div>
+  </footer>
+
+  <!-- ============================================
+       LOADING OVERLAY (Spinner)
+  ============================================ -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="spinner-ring"></div>
+    <div class="loading-text" id="loading-text">Analyzing your resume...</div>
+    <div class="loading-steps" id="loading-steps">Extracting text content</div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- External Libraries: PDF.js, Mammoth.js, jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="cherry.js"></script>
+  <script>if (typeof lucide !== 'undefined') lucide.createIcons();</script>
+</body>
+</html>
